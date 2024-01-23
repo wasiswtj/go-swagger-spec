@@ -1,0 +1,317 @@
+openapi: 3.0.3
+info:
+  title: Foo Bar Service - OpenAPI 3.0
+  description: |-
+    This is sample boiler plate for go-swagger with clean architecture internal structure
+  termsOfService: http://pegadaian.co.id
+  contact:
+    email: wasis.witjaksono@pegadaian.co.id
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: foo
+    description: Foo Controller
+paths:
+  /v1/foo:
+    post:
+      tags:
+        - foo
+      summary: Add a new foo
+      description: Add a new foo
+      operationId: addFoo
+      requestBody:
+        description: |-
+          ## Body Description
+          | Key | Description | Notes |
+          | --- | --- | --- |
+          | Foo | Foo Description | Min 3 Character, Max 3 Character |
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FooRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FooResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '504':
+          $ref: '#/components/responses/GatewayTimeout'
+      security:
+        - basicAuth: []
+    get:
+      tags:
+        - foo
+      summary: Finds Pets by status
+      description: Multiple status values can be provided with comma separated strings
+      operationId: findPetsByStatus
+      parameters:
+        - name: foo
+          in: query
+          description: Foo values that need to be considered for filter
+          required: true
+          schema:
+            type: string
+            example: "bar"
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FooGetResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '504':
+          $ref: '#/components/responses/GatewayTimeout'
+      security:
+        - basicAuth: []
+components:
+  schemas:
+    ### request section ###
+    ### type your service request below ###
+    FooRequest:
+      required:
+        - foo
+        - fooDate
+        - fooDateTime
+        - fooEnum
+      type: object
+      properties:
+        foo:
+          type: string
+          minLength: 3
+          maxLength: 3
+          example: "bar"
+        fooDate:
+          type: string
+          format: date
+        fooDateTime:
+          type: string
+          format: date-time
+        fooEnum:
+          type: string
+          enum: ["BAR"]
+
+    ### response section ###
+    ### type your service response ###
+    FooResponse:
+      type: object
+      properties:
+        responseCode:
+          description: |-
+            ## responseCode Description
+            | Value | Description |
+            | --- | --- |
+            | 200 | substring(0,2) -> Http Status Code |
+            | 0000 | substring(3,7) -> Service ID  |
+            | 000 | substring(8,10) -> Backend Case Code |
+          type: string
+          example: "20000000000"
+        responseDesc:
+          type: string
+          example: "success"
+        data: 
+          $ref: '#/components/schemas/FooRequest'
+          
+    FooGetResponse:
+      type: object
+      properties:
+        responseCode:
+          description: |-
+            ## responseCode Description
+            | Value | Description |
+            | --- | --- |
+            | 200 | substring(0,2) -> Http Status Code |
+            | 0000 | substring(3,7) -> Service ID  |
+            | 000 | substring(8,10) -> Backend Case Code |
+          type: string
+          example: "20000000000"
+        responseDesc:
+          type: string
+          example: "success"
+        data: 
+          type: array
+          items:
+            $ref: '#/components/schemas/FooRequest'
+    
+    ### default response ###
+    ### do not edit schemas below ###
+    BaseResponseBadRequest:
+      type: object
+      properties:
+        responseCode:
+          description: |-
+            ## responseCode Description
+            | Value | Description |
+            | --- | --- |
+            | 400 | substring(0,2) -> Http Status Code |
+            | 0000 | substring(3,7) -> Service ID  |
+            | 000 | substring(8,10) -> Backend Case Code |
+          type: string
+          example: "40000000000"
+        responseDesc:
+          type: string
+          example: "bad request"
+        data: 
+          type: object
+
+    BaseResponseUnauthorized:
+      type: object
+      properties:
+        responseCode:
+          description: |-
+            ## responseCode Description
+            | Value | Description |
+            | --- | --- |
+            | 401 | substring(0,2) -> Http Status Code |
+            | 0000 | substring(3,7) -> Service ID  |
+            | 000 | substring(8,10) -> Backend Case Code |
+          type: string
+          example: "40100000000"
+        responseDesc:
+          type: string
+          example: "unauthorized"
+        data: 
+          type: object
+
+    BaseResponseForbidden:
+      type: object
+      properties:
+        responseCode:
+          description: |-
+            ## responseCode Description
+            | Value | Description |
+            | --- | --- |
+            | 403 | substring(0,2) -> Http Status Code |
+            | 0000 | substring(3,7) -> Service ID  |
+            | 000 | substring(8,10) -> Backend Case Code |
+          type: string
+          example: "40300000000"
+        responseDesc:
+          type: string
+          example: "forbidden"
+        data: 
+          type: object
+
+    BaseResponseNotFound:
+      type: object
+      properties:
+        responseCode:
+          description: |-
+            ## responseCode Description
+            | Value | Description |
+            | --- | --- |
+            | 404 | substring(0,2) -> Http Status Code |
+            | 0000 | substring(3,7) -> Service ID  |
+            | 000 | substring(8,10) -> Backend Case Code |
+          type: string
+          example: "40400000000"
+        responseDesc:
+          type: string
+          example: "not found"
+        data: 
+          type: object
+
+    BaseResponseInternalServerError:
+      type: object
+      properties:
+        responseCode:
+          description: |-
+            ## responseCode Description
+            | Value | Description |
+            | --- | --- |
+            | 500 | substring(0,2) -> Http Status Code |
+            | 0000 | substring(3,7) -> Service ID  |
+            | 000 | substring(8,10) -> Backend Case Code |
+          type: string
+          example: "50000000000"
+        responseDesc:
+          type: string
+          example: "internal server error"
+        data: 
+          type: object
+
+    BaseResponseGatewayTimeout:
+      type: object
+      properties:
+        responseCode:
+          description: |-
+            ## responseCode Description
+            | Value | Description |
+            | --- | --- |
+            | 504 | substring(0,2) -> Http Status Code |
+            | 0000 | substring(3,7) -> Service ID  |
+            | 000 | substring(8,10) -> Backend Case Code |
+          type: string
+          example: "50400000000"
+        responseDesc:
+          type: string
+          example: "gateway timeout"
+        data: 
+          type: object
+         
+  ### reusable server response ### 
+  ### do not edit responses below ###
+  responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BaseResponseBadRequest'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BaseResponseUnauthorized'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BaseResponseForbidden'
+    NotFound:
+      description: Data Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BaseResponseNotFound'
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BaseResponseInternalServerError'
+    GatewayTimeout:
+      description: Server act as Proxy and Occur Upstream Server Timeout
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BaseResponseGatewayTimeout'
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
